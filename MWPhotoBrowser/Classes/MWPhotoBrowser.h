@@ -24,6 +24,8 @@
 @protocol MWPhotoBrowserDelegate <NSObject>
 - (NSUInteger)numberOfPhotosInPhotoBrowser:(MWPhotoBrowser *)photoBrowser;
 - (id<MWPhoto>)photoBrowser:(MWPhotoBrowser *)photoBrowser photoAtIndex:(NSUInteger)index;
+- (void)photoBrowswer:(MWPhotoBrowser *)photoBrowswer didRejectPhotoAtIndex:(NSInteger)index;
+
 @optional
 - (MWCaptionView *)photoBrowser:(MWPhotoBrowser *)photoBrowser captionViewForPhotoAtIndex:(NSUInteger)index;
 @end

@@ -13,5 +13,7 @@
     NSArray *_photos;
     UISegmentedControl *_segmentedControl;
 }
+
 @property (nonatomic, retain) NSArray *photos;
+
 @end

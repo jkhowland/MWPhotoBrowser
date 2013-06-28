@@ -1001,15 +1001,9 @@ navigationBarBackgroundImageLandscapePhone = _navigationBarBackgroundImageLandsc
             [self setControlsHidden:NO animated:YES permanent:YES];
             
             // Sheet
-            if ([MFMailComposeViewController canSendMail]) {
-                self.actionsSheet = [[[UIActionSheet alloc] initWithTitle:nil delegate:self
-                                                        cancelButtonTitle:NSLocalizedString(@"Cancel", nil) destructiveButtonTitle:nil
-                                                        otherButtonTitles:NSLocalizedString(@"Save", nil), NSLocalizedString(@"Copy", nil), NSLocalizedString(@"Email", nil), nil] autorelease];
-            } else {
-                self.actionsSheet = [[[UIActionSheet alloc] initWithTitle:nil delegate:self
-                                                        cancelButtonTitle:NSLocalizedString(@"Cancel", nil) destructiveButtonTitle:nil
-                                                        otherButtonTitles:NSLocalizedString(@"Save", nil), NSLocalizedString(@"Copy", nil), nil] autorelease];
-            }
+            self.actionsSheet = [[[UIActionSheet alloc] initWithTitle:nil delegate:self
+                                                    cancelButtonTitle:NSLocalizedString(@"Cancel", nil) destructiveButtonTitle:nil
+                                                    otherButtonTitles:NSLocalizedString(@"Reject Image", nil), nil] autorelease];
             _actionsSheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
             if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
                 [_actionsSheet showFromBarButtonItem:sender animated:YES];
@@ -1029,11 +1023,8 @@ navigationBarBackgroundImageLandscapePhone = _navigationBarBackgroundImageLandsc
         self.actionsSheet = nil;
         if (buttonIndex != actionSheet.cancelButtonIndex) {
             if (buttonIndex == actionSheet.firstOtherButtonIndex) {
-                [self savePhoto]; return;
-            } else if (buttonIndex == actionSheet.firstOtherButtonIndex + 1) {
-                [self copyPhoto]; return;	
-            } else if (buttonIndex == actionSheet.firstOtherButtonIndex + 2) {
-                [self emailPhoto]; return;
+                [_delegate photoBrowswer:self didRejectPhotoAtIndex:_currentPageIndex];
+                return;
             }
         }
     }
