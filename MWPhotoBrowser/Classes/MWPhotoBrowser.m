@@ -975,7 +975,7 @@ navigationBarBackgroundImageLandscapePhone = _navigationBarBackgroundImageLandsc
 #pragma mark - Misc
 
 - (void)doneButtonPressed:(id)sender {
-    [self dismissModalViewControllerAnimated:YES];
+    [_delegate photoBrowser:self didSelectDoneAtIndex:_currentPageIndex];
 }
 
 - (void)actionButtonPressed:(id)sender {
