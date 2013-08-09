@@ -37,9 +37,11 @@
 // Properties
 @property (nonatomic) BOOL displayActionButton;
 
+@property (readonly, nonatomic, assign) BOOL launchedForNewImage;
+
 // Init
 - (id)initWithPhotos:(NSArray *)photosArray  __attribute__((deprecated)); // Depreciated
-- (id)initWithDelegate:(id <MWPhotoBrowserDelegate>)delegate;
+- (id)initWithDelegate:(id <MWPhotoBrowserDelegate>)delegate newImage:(BOOL)newImage;
 
 // Reloads the photo browser and refetches data
 - (void)reloadData;

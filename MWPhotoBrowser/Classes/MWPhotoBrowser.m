@@ -66,6 +66,7 @@
 @property (nonatomic, retain) UIBarButtonItem *previousViewControllerBackButton;
 @property (nonatomic, retain) UIImage *navigationBarBackgroundImageDefault, *navigationBarBackgroundImageLandscapePhone;
 @property (nonatomic, retain) UIActionSheet *actionsSheet;
+@property (nonatomic, assign) BOOL newImage;
 
 // Private Methods
 
@@ -159,11 +160,16 @@ navigationBarBackgroundImageLandscapePhone = _navigationBarBackgroundImageLandsc
     return self;
 }
 
-- (id)initWithDelegate:(id <MWPhotoBrowserDelegate>)delegate {
+- (id)initWithDelegate:(id <MWPhotoBrowserDelegate>)delegate newImage:(BOOL)newImage {
     if ((self = [self init])) {
         _delegate = delegate;
+        _newImage = newImage;
 	}
 	return self;
+}
+
+- (BOOL)launchedForNewImage {
+    return _newImage;
 }
 
 - (id)initWithPhotos:(NSArray *)photosArray {
@@ -1012,7 +1018,7 @@ navigationBarBackgroundImageLandscapePhone = _navigationBarBackgroundImageLandsc
         self.actionsSheet = nil;
         if (buttonIndex != actionSheet.cancelButtonIndex) {
             if (buttonIndex == actionSheet.firstOtherButtonIndex) {
-                [_delegate photoBrowswer:self didRejectPhotoAtIndex:_currentPageIndex];
+                [_delegate photoBrowser:self didRejectPhotoAtIndex:_currentPageIndex];
                 return;
             }
         }
