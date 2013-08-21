@@ -9,13 +9,20 @@
 #import "MWPhoto.h"
 #import "MWPhotoBrowser.h"
 
+#import "DropboxSDK.h"
+#import "DropBlocks.h"
+
+#import "LSCollectionViewImage.h"
+#import "LSImage+Additions.h"
+
 // Private
 @interface MWPhoto () {
 
     // Image Sources
     NSString *_photoPath;
     NSURL *_photoURL;
-
+    LSCollectionViewImage *_collectionImage;
+    
     // Image
     UIImage *_underlyingImage;
 
@@ -55,6 +62,10 @@ caption = _caption;
 	return [[[MWPhoto alloc] initWithURL:url] autorelease];
 }
 
++ (MWPhoto *)photoWithCollectionImage:(LSCollectionViewImage *)collectionImage {
+    return [[[MWPhoto alloc] initWithCollectionImage:collectionImage] autorelease];
+}
+
 #pragma mark NSObject
 
 - (id)initWithImage:(UIImage *)image {
@@ -78,11 +89,19 @@ caption = _caption;
 	return self;
 }
 
+- (id)initWithCollectionImage:(LSCollectionViewImage *)collectionImage {
+	if ((self = [super init])) {
+		_collectionImage = collectionImage;
+	}
+	return self;
+}
+
 - (void)dealloc {
     [_caption release];
     [[SDWebImageManager sharedManager] cancelForDelegate:self];
 	[_photoPath release];
 	[_photoURL release];
+    [_collectionImage release];
 	[_underlyingImage release];
 	[super dealloc];
 }
@@ -107,6 +126,18 @@ caption = _caption;
             // Load async from web (using SDWebImage)
             SDWebImageManager *manager = [SDWebImageManager sharedManager];
             [manager downloadWithURL:_photoURL delegate:self];
+        } else if (_collectionImage) {
+            
+            NSString *imagePath = [NSString stringWithFormat:@"%@%@",[LSImage directoriesForAccount:APP_DELEGATE.currentAccount], _collectionImage.imageMetadata.filename];
+            [DropBlocks loadFile:_collectionImage.imageMetadata.path intoPath:imagePath completionBlock:^(NSString *contentType, DBMetadata *metadata, NSError *error) {
+                
+                UIImage *image = [UIImage imageWithContentsOfFile:imagePath];
+                self.underlyingImage = image;
+                [self imageLoadingComplete];
+
+            } progressBlock:^(CGFloat progress) {
+                
+            }];            
         } else {
             // Failed - no source
             self.underlyingImage = nil;

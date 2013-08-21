@@ -15,6 +15,9 @@
 // If you want to handle photos, caching, decompression
 // yourself then you can simply ensure your custom data model
 // conforms to MWPhotoProtocol
+
+@class LSCollectionViewImage;
+
 @interface MWPhoto : NSObject <MWPhoto, SDWebImageManagerDelegate, SDWebImageDecoderDelegate>
 
 // Properties
@@ -24,6 +27,7 @@
 + (MWPhoto *)photoWithImage:(UIImage *)image;
 + (MWPhoto *)photoWithFilePath:(NSString *)path;
 + (MWPhoto *)photoWithURL:(NSURL *)url;
++ (MWPhoto *)photoWithCollectionImage:(LSCollectionViewImage *)collectionImage;
 
 // Init
 - (id)initWithImage:(UIImage *)image;
