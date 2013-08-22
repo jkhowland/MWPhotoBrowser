@@ -10,7 +10,6 @@
 #import "MWPhotoBrowser.h"
 
 #import "DropboxSDK.h"
-#import "DropBlocks.h"
 
 #import "LSCollectionViewImage.h"
 #import "LSImage+Additions.h"
@@ -21,7 +20,6 @@
     // Image Sources
     NSString *_photoPath;
     NSURL *_photoURL;
-    LSCollectionViewImage *_collectionImage;
     
     // Image
     UIImage *_underlyingImage;
@@ -132,16 +130,14 @@ caption = _caption;
             
             if (![[NSFileManager defaultManager] fileExistsAtPath:imagePath]) {            
             
-                [DropBlocks loadFile:_collectionImage.imageMetadata.path intoPath:imagePath completionBlock:^(NSString *contentType, DBMetadata *metadata, NSError *error) {
+                [_delegate photo:self requestLoadImageWithCompletionBlock:^(NSString *contentType, DBMetadata *metadata, NSError *error) {
                     
                     UIImage *image = [UIImage imageWithContentsOfFile:imagePath];
                     self.underlyingImage = image;
                     [self imageDidFinishLoadingSoDecompress];
-                    
-                } progressBlock:^(CGFloat progress) {
-                    
-                }];            
 
+                }];
+                
             } else {
             
                 UIImage *image = [UIImage imageWithContentsOfFile:imagePath];

@@ -16,7 +16,10 @@
 // yourself then you can simply ensure your custom data model
 // conforms to MWPhotoProtocol
 
+@protocol MWPhotoDelegate;
+
 @class LSCollectionViewImage;
+@class DBMetadata;
 
 @interface MWPhoto : NSObject <MWPhoto, SDWebImageManagerDelegate, SDWebImageDecoderDelegate>
 
@@ -34,5 +37,13 @@
 - (id)initWithFilePath:(NSString *)path;
 - (id)initWithURL:(NSURL *)url;
 
+@property (nonatomic, strong) id<MWPhotoDelegate> delegate;
+@property (nonatomic, strong) LSCollectionViewImage *collectionImage;
+
 @end
 
+@protocol MWPhotoDelegate <NSObject>
+
+- (void)photo:(MWPhoto *)photo requestLoadImageWithCompletionBlock:(void (^)(NSString *contentType, DBMetadata *metadata, NSError *error))completionBlock;
+
+@end
