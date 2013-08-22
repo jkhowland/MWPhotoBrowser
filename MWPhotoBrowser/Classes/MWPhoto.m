@@ -101,7 +101,6 @@ caption = _caption;
     [[SDWebImageManager sharedManager] cancelForDelegate:self];
 	[_photoPath release];
 	[_photoURL release];
-    [_collectionImage release];
 	[_underlyingImage release];
 	[super dealloc];
 }
@@ -128,16 +127,28 @@ caption = _caption;
             [manager downloadWithURL:_photoURL delegate:self];
         } else if (_collectionImage) {
             
-            NSString *imagePath = [NSString stringWithFormat:@"%@%@",[LSImage directoriesForAccount:APP_DELEGATE.currentAccount], _collectionImage.imageMetadata.filename];
-            [DropBlocks loadFile:_collectionImage.imageMetadata.path intoPath:imagePath completionBlock:^(NSString *contentType, DBMetadata *metadata, NSError *error) {
-                
+            NSString *imagePath = NSTemporaryDirectory();
+            imagePath = [imagePath stringByAppendingFormat:@"%@", _collectionImage.imageMetadata.filename];
+            
+            if (![[NSFileManager defaultManager] fileExistsAtPath:imagePath]) {            
+            
+                [DropBlocks loadFile:_collectionImage.imageMetadata.path intoPath:imagePath completionBlock:^(NSString *contentType, DBMetadata *metadata, NSError *error) {
+                    
+                    UIImage *image = [UIImage imageWithContentsOfFile:imagePath];
+                    self.underlyingImage = image;
+                    [self imageDidFinishLoadingSoDecompress];
+                    
+                } progressBlock:^(CGFloat progress) {
+                    
+                }];            
+
+            } else {
+            
                 UIImage *image = [UIImage imageWithContentsOfFile:imagePath];
                 self.underlyingImage = image;
                 [self imageLoadingComplete];
-
-            } progressBlock:^(CGFloat progress) {
                 
-            }];            
+            }            
         } else {
             // Failed - no source
             self.underlyingImage = nil;
